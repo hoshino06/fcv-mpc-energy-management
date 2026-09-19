@@ -9,7 +9,7 @@ The equilibrium demand increases by 10 kW at 2.0 s and by another 10 kW at
 0.5 s, 100 DDP iterations, and `Qmax={72,36,18,3.6} As`.
 
 ```matlab
-addpath('simulation/experiments/studies/01_qmax_sweep');
+addpath('simulation/fcv-mpc-energy-management/studies/01_qmax_sweep');
 run_study
 ```
 

@@ -13,8 +13,8 @@ function S = build_udds_scenario()
 % battery discharge the frequency-decoupling method actually used, so both
 % methods are compared at equal battery utilisation (paper Sec. V-B).
 
-cfgdir = fileparts(mfilename('fullpath'));                 % .../experiments/studies/03_udds
-expdir = fileparts(fileparts(cfgdir));                     % .../experiments
+cfgdir = fileparts(mfilename('fullpath')); % .../fcv-mpc-energy-management/studies/03_udds
+expdir = fileparts(fileparts(cfgdir));     % .../fcv-mpc-energy-management
 S.study = '03_udds';
 S.udds_file = fullfile(cfgdir,'data', ...
                        '都市ダイナモメーター運転スケジュール_PFt付き.txt');

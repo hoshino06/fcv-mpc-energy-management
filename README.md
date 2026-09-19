@@ -19,15 +19,15 @@ writes to `results/solver_validation/`.
 Run one stage by adding only its folder, for example:
 
 ```matlab
-addpath('simulation/experiments/studies/01_qmax_sweep');
+addpath('simulation/fcv-mpc-energy-management/studies/01_qmax_sweep');
 run_study
 
-rmpath('simulation/experiments/studies/01_qmax_sweep');
-addpath('simulation/experiments/studies/02_method_comparison');
+rmpath('simulation/fcv-mpc-energy-management/studies/01_qmax_sweep');
+addpath('simulation/fcv-mpc-energy-management/studies/02_method_comparison');
 run_study
 
-rmpath('simulation/experiments/studies/02_method_comparison');
-addpath('simulation/experiments/studies/03_udds');
+rmpath('simulation/fcv-mpc-energy-management/studies/02_method_comparison');
+addpath('simulation/fcv-mpc-energy-management/studies/03_udds');
 run_study
 ```
 

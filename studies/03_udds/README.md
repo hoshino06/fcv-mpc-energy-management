@@ -4,7 +4,7 @@ This study compares DDP with uniform/non-uniform horizons, fmincon, and the
 low-pass frequency-decoupling method on a predeclared UDDS interval.
 
 ```matlab
-addpath('simulation/experiments/studies/03_udds');
+addpath('simulation/fcv-mpc-energy-management/studies/03_udds');
 run_study                 % all phases
 run_study('lowpath')      % frequency-decoupling runs
 run_study('nmpc')         % DDP and fmincon runs

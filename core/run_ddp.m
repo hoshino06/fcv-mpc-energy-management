@@ -19,8 +19,8 @@ function outfile = run_ddp(scenario, k, N_iter, horizon)
 
 if nargin < 4 || isempty(horizon), horizon = 'nonunif5'; end
 
-benchdir = fileparts(mfilename('fullpath'));                   % .../experiments/core
-expdir   = fileparts(benchdir);                                % .../experiments
+benchdir = fileparts(mfilename('fullpath')); % .../fcv-mpc-energy-management/core
+expdir   = fileparts(benchdir);              % .../fcv-mpc-energy-management
 mdir     = fullfile(expdir,'methods','ddp');
 assert(isfolder(mdir), 'DDP model dir not found: %s', mdir);
 

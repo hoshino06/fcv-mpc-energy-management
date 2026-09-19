@@ -6,7 +6,7 @@ on a common two-step demand. The demand increments are reduced to 8 kW to avoid
 the steady-state boundary encountered by the 10 kW concept demonstration.
 
 ```matlab
-addpath('simulation/experiments/studies/02_method_comparison');
+addpath('simulation/fcv-mpc-energy-management/studies/02_method_comparison');
 run_study
 ```
 
