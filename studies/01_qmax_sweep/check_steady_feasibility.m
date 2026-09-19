@@ -2,7 +2,7 @@ function T = check_steady_feasibility(outdir)
 %CHECK_STEADY_FEASIBILITY Scan the legacy equilibrium map with all constraints.
 here=fileparts(mfilename('fullpath'));
 expdir=fullfile(here,'..','..'); mdir=fullfile(expdir,'methods','ddp');
-if nargin<1, outdir=fullfile(expdir,'results','step_demand'); end
+if nargin<1, outdir=fullfile(expdir,'results','01_qmax_sweep'); end
 addpath(mdir,fullfile(mdir,'model'),fullfile(mdir,'functions'));
 BM_scn=struct('plant',struct('start_Vcm_idx',100,'start_Ifc_idx',100,'start_SOC',.5)); %#ok<NASGU>
 assignin('base','BM_scn',BM_scn); assignin('base','BM_diag_old',pwd); assignin('base','BM_diag_outdir',outdir);

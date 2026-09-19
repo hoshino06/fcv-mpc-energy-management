@@ -13,7 +13,7 @@ function figfile = plot_interval(seg_name, tags)
 
 studydir = fileparts(mfilename('fullpath'));
 expdir   = fileparts(fileparts(studydir));
-resroot  = fullfile(expdir,'results','udds');
+resroot  = fullfile(expdir,'results','03_udds');
 
 if nargin < 2 || isempty(tags)
     f = dir(fullfile(resroot,'*',['*' seg_name '*.mat']));

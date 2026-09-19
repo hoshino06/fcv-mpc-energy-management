@@ -1,6 +1,7 @@
 function T=summarize_method_comparison()
 %SUMMARIZE_METHOD_COMPARISON Paper-facing status of the matched-use 8 kW runs.
-here=fileparts(mfilename('fullpath')); expdir=fileparts(fileparts(here)); out=fullfile(expdir,'results','step_demand');
+here=fileparts(mfilename('fullpath')); expdir=fileparts(fileparts(here));
+out=fullfile(expdir,'results','02_method_comparison');
 addpath(fullfile(expdir,'core'));
 files={fullfile(out,'lowpath','step_demand_wn16_migrated.mat'); ...
        fullfile(out,'fmincon','step_demand_8kW_Qmax60p77_unifNp10.mat'); ...

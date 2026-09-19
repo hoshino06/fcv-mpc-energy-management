@@ -1,11 +1,11 @@
 %% collect_table.m
-% results/udds/<method>/*.mat を評価し、UDDSの統合比較表を作る。
+% results/03_udds/<method>/*.mat を評価し、UDDSの統合比較表を作る。
 
 here   = fileparts(mfilename('fullpath'));
 expdir = fileparts(fileparts(here));
 addpath(here,fullfile(expdir,'core'));
 common_scenario=build_udds_scenario();
-resroot = fullfile(expdir,'results','udds');
+resroot = fullfile(expdir,'results','03_udds');
 files=[dir(fullfile(resroot,'ddp','*.mat'));dir(fullfile(resroot,'fmincon','*.mat'));dir(fullfile(resroot,'lowpath','*.mat'))];
 if isempty(files), fprintf('no result files under %s\n', resroot); return; end
 

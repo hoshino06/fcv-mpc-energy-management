@@ -5,7 +5,12 @@ n=numel(Ridx.files); C=lines(n);
 names=arrayfun(@(q)sprintf('Q_{max} = %g As',q),S.Qmax_As,'UniformOutput',false);
 sig=cell(n,1); H2=nan(n,1); qend=nan(n,1); qmax=nan(n,1); rmse=nan(n,1); runtime=nan(n,1);
 for i=1:n
-    R=load(Ridx.files{i}); so=R.simout; get=@(s)so.get(s);
+    runfile=Ridx.files{i};
+    if ~isfile(runfile)
+        [~,name,ext]=fileparts(runfile);
+        runfile=fullfile(outdir,'ddp',[name ext]);
+    end
+    R=load(runfile); so=R.simout; get=@(s)so.get(s);
     sig{i}=struct('Pd',get('Pd'),'Vcm',get('Vcm'),'Ifc',get('Ifc'), ...
         'Ib',get('Ib'),'S',get('S'),'H2',get('H2'),'demand',R.demand);
     H2(i)=R.Ref.Ifc*2*sig{i}.H2.Data(end)*R.params.n/(96485.3321*2);

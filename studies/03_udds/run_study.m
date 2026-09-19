@@ -3,8 +3,8 @@ function run_study(phase)
 if nargin<1, phase='all'; end
 expdir=fileparts(mfilename('fullpath'));
 expdir=fileparts(fileparts(expdir));
-addpath(fullfile(expdir,'core'),fullfile(expdir,'studies','udds'));
-S=udds_scenario(); out=fullfile(expdir,'results','udds');
+addpath(fullfile(expdir,'core'),fullfile(expdir,'studies','03_udds'));
+S=udds_scenario(); out=fullfile(expdir,'results','03_udds');
 if any(strcmp(phase,{'all','lowpath'}))
     records=struct([]); selected='';
     for wn=S.comparison.filter_wn
@@ -29,6 +29,10 @@ if any(strcmp(phase,{'all','lowpath'}))
 end
 if any(strcmp(phase,{'all','nmpc'}))
     R=load(fullfile(out,'study_config.mat')); S=R.S;
+    % Normalize saved pre-reorganization configurations to the numbered stage.
+    S.study='03_udds';
+    S.udds_file=fullfile(fileparts(mfilename('fullpath')),'data', ...
+        '都市ダイナモメーター運転スケジュール_PFt付き.txt');
     for hz=S.comparison.horizons
         for ni=S.comparison.N_iter
             try

@@ -86,7 +86,7 @@ ylabel(ax3,'# intervals');
 title(ax3,sprintf('(3) severity of %d active intervals; representatives = peak-power terciles', numel(act)));
 
 studydir=fileparts(mfilename('fullpath'));
-outdir = fullfile(fileparts(fileparts(studydir)),'results','udds');
+outdir = fullfile(fileparts(fileparts(studydir)),'results','03_udds');
 if ~isfolder(outdir), mkdir(outdir); end
 saveas(fig, fullfile(outdir,'udds_segmentation.png'));
 fprintf('\nfigure -> %s\n', fullfile(outdir,'udds_segmentation.png'));

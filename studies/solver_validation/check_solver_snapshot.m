@@ -3,7 +3,7 @@ function T = check_solver_snapshot(case_name)
 if nargin<1, case_name='free'; end
 assignin('base','CHECK_case',case_name);
 expdir=fileparts(fileparts(mfilename('fullpath')));
-addpath(fullfile(expdir,'studies','udds'),fullfile(expdir,'core'));
+addpath(fullfile(expdir,'studies','03_udds'),fullfile(expdir,'core'));
 assignin('base','CHECK_expdir',expdir); assignin('base','CHECK_here',pwd);
 assignin('base','CHECK_path',path); assignin('base','BM_scn',udds_scenario());
 mdir=fullfile(expdir,'methods','ddp');

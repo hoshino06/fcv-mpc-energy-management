@@ -289,7 +289,7 @@ Pd_base =  repmat(params.Pd,length(time),1);
 
 % ドライビングサイクルから求めた電力需要変化
 % ===== PFt付きドライビングサイクルの読み込み =====
-file_path = fullfile('..','..','studies','udds','data',"都市ダイナモメーター運転スケジュール_PFt付き.txt");
+file_path = fullfile('..','..','studies','03_udds','data',"都市ダイナモメーター運転スケジュール_PFt付き.txt");
 cycle_data = readtable(file_path,'VariableNamingRule','preserve');
 time_cycle_all = cycle_data{:,1};      % Time [s]（1秒刻み）
 PFt_cycle_all  = cycle_data{:,end};    % PFt [W]

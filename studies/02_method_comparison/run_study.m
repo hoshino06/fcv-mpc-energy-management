@@ -1,8 +1,8 @@
-function files=run_method_comparison()
-%RUN_METHOD_COMPARISON Run the matched-battery-use 8 kW comparison.
+function files=run_study()
+%RUN_STUDY Stage 02: run the matched-battery-use method comparison.
 here=fileparts(mfilename('fullpath')); expdir=fileparts(fileparts(here));
-addpath(here,fullfile(expdir,'studies','udds'),fullfile(expdir,'core'));
-S=step_demand_scenario(8000);
+addpath(here,fullfile(expdir,'core'));
+S=step_demand_scenario(8000,'02_method_comparison');
 S.lowpath=struct('Qs',0.15,'R',100,'regenerate_functions',1);
 files=cell(4,1);
 files{1}=run_lowpath(S,1,16);
