@@ -17,11 +17,18 @@ Raw runs are written to `results/01_qmax_sweep/ddp/`; `summary.csv`, the run
 index, and the paper-facing trajectory, discharge-budget, hydrogen, and tracking
 figures are written to `results/01_qmax_sweep/`.
 
-`power_tracking.png` follows the layout and color order of manuscript Fig. 3.
-For quantitative diagnosis, `tracking_error.png` shows `Psys-Pref`, and
+The figures are numbered in manuscript order:
+
+1. `01_power_tracking.png`: supplied power and demand (manuscript Fig. 3)
+1a. `01a_tracking_error.png`: diagnostic `Psys-Pref` companion to the first figure
+2. `02_control_inputs.png`: compressor voltage, stack current, and battery current
+3. `03_battery_discharge.png`: cumulative battery discharge
+4. `04_hydrogen_consumption.png`: hydrogen comparison
+
+The plotting script uses a common IEEE-paper style for canvas proportions,
+Times New Roman typography, line widths, axes, colors, and legends.
 `summary.csv` records full-window RMSE, maximum absolute error, mean error,
-final error, and post-step RMSE. Plot styling must not be used to hide a
-tracking discrepancy.
+final error, and post-step RMSE. Plot styling must not hide a tracking discrepancy.
 
 The shared step-demand definition is `core/step_demand_scenario.m`. This stage
 has no runtime dependency on `simulation/ronbun_iwai/`.

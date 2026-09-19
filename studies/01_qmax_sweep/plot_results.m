@@ -1,8 +1,8 @@
 function T = plot_results(outdir)
 %PLOT_RESULTS Plot and summarize the shared-method step-demand sweep.
 Ridx=load(fullfile(outdir,'run_index.mat')); S=Ridx.S;
-n=numel(Ridx.files); C=lines(n);
-names=arrayfun(@(q)sprintf('Q_{max} = %g As',q),S.Qmax_As,'UniformOutput',false);
+n=numel(Ridx.files);
+names=arrayfun(@(q)sprintf('$Q_{\\max} = %g$ As',q),S.Qmax_As,'UniformOutput',false);
 sig=cell(n,1); H2=nan(n,1); qend=nan(n,1); qmax=nan(n,1); rmse=nan(n,1); runtime=nan(n,1);
 maxerr=nan(n,1); meanerr=nan(n,1); finalerr=nan(n,1); poststep_rmse=nan(n,1);
 for i=1:n
@@ -30,47 +30,85 @@ T=table(Qmax_As,H2_g,qdis_end_As,qdis_max_As,power_rmse_W, ...
     power_max_abs_error_W,power_mean_error_W,power_final_error_W, ...
     power_poststep_rmse_W,whole_sim_s);
 writetable(T,fullfile(outdir,'summary.csv'));
-f=figure('Visible','off','Color','w','Position',[100 100 900 720]);
-tiledlayout(3,1,'TileSpacing','compact'); labels={'V_{cm} [V]','I_{st} [A]','I_{bat} [A]'}; fields={'Vcm','Ifc','Ib'};
-for k=1:3
-    nexttile; hold on; grid on;
-    for i=1:n, plot(sig{i}.(fields{k}).Time,sig{i}.(fields{k}).Data,'Color',C(i,:)); end
-    xlim([0 S.figure_time_s]); ylabel(labels{k});
-end
-xlabel('Time [s]'); legend(names,'Location','best');
-exportgraphics(f,fullfile(outdir,'fig4_inputs.png'),'Resolution',200); close(f);
-% Paper-facing power plot: reproduce the MATLAB layout used for Fig. 3 in
-% the manuscript (four supplied-power traces followed by the red demand).
 paper_colors=[0 0.4470 0.7410; 0.8500 0.3250 0.0980; ...
     0.4940 0.1840 0.5560; 0.6350 0.0780 0.1840];
-f=figure('Visible','off','Color','w','Position',[100 100 1400 900]);
-ax=axes(f); hold(ax,'on'); box(ax,'on');
+
+% 01: manuscript Fig. 3 -- supplied power and reference demand.
+f=paper_figure([720 270]); ax=axes(f); hold(ax,'on');
 for i=1:n
-    plot(ax,sig{i}.Pd.Time,sig{i}.Pd.Data,'Color',paper_colors(i,:),'LineWidth',2);
+    plot(ax,sig{i}.Pd.Time,sig{i}.Pd.Data,'Color',paper_colors(i,:),'LineWidth',1.1);
 end
-plot(ax,sig{1}.demand.Time,sig{1}.demand.Data,'r','LineWidth',2);
+plot(ax,sig{1}.demand.Time,sig{1}.demand.Data,'r','LineWidth',1.1);
 xlim(ax,[0 S.figure_time_s]); ylim(ax,[2e4 5e4]);
-xlabel(ax,'Time [s]'); ylabel(ax,'Power [W]');
-legend(ax,[names(:);{'Power Demand'}],'Location','best');
-set(ax,'FontSize',15);
-exportgraphics(f,fullfile(outdir,'power_tracking.png'),'Resolution',200); close(f);
+xlabel(ax,'Time [s]'); ylabel(ax,'Power [W]'); paper_axes(ax);
+legend(ax,[names(:);{'Power Demand'}],'Location','northeast', ...
+    'Interpreter','latex','FontName','Times New Roman','FontSize',8);
+exportgraphics(f,fullfile(outdir,'01_power_tracking.png'),'Resolution',600); close(f);
+
+% 02: manuscript Fig. 4 -- three control inputs.
+f=paper_figure([720 500]); tl=tiledlayout(f,3,1,'TileSpacing','compact','Padding','compact');
+labels={'Voltage [V]','Current [A]','Current [A]'}; fields={'Vcm','Ifc','Ib'};
+ylims={[90 150],[90 250],[-40 40]}; yticks_={90:20:150,100:50:250,-40:20:40};
+for k=1:3
+    ax=nexttile(tl); hold(ax,'on');
+    for i=1:n
+        plot(ax,sig{i}.(fields{k}).Time,sig{i}.(fields{k}).Data, ...
+            'Color',paper_colors(i,:),'LineWidth',1.0);
+    end
+    xlim(ax,[0 S.figure_time_s]); ylim(ax,ylims{k}); yticks(ax,yticks_{k});
+    ylabel(ax,labels{k}); paper_axes(ax);
+    if k<3, ax.XTickLabel=[]; else, xlabel(ax,'Time [s]'); end
+    if k==1
+        legend(ax,names,'Location','southeast','Interpreter','latex', ...
+            'FontName','Times New Roman','FontSize',8);
+    end
+end
+exportgraphics(f,fullfile(outdir,'02_control_inputs.png'),'Resolution',600); close(f);
+
+% 03: manuscript Fig. 5 -- cumulative battery discharge.
+f=paper_figure([720 300]); ax=axes(f); hold(ax,'on');
+for i=1:n
+    plot(ax,sig{i}.S.Time,sig{i}.S.Data*36,'Color',paper_colors(i,:),'LineWidth',1.1);
+end
+xlim(ax,[0 S.figure_time_s]); ylim(ax,[-10 80]);
+xlabel(ax,'Time [s]'); ylabel(ax,'$q_{\mathrm{dis}}$ [As]','Interpreter','latex'); paper_axes(ax);
+legend(ax,names,'Location','northeast','Interpreter','latex', ...
+    'FontName','Times New Roman','FontSize',8);
+exportgraphics(f,fullfile(outdir,'03_battery_discharge.png'),'Resolution',600); close(f);
+
+% 04: manuscript Fig. 6 -- hydrogen consumption and relative increase.
+f=paper_figure([720 270]); ax=axes(f);
+b=bar(ax,H2,'FaceColor','flat','BarWidth',0.72); b.CData=paper_colors;
+ylim(ax,[3 3.5]); yticks(ax,3:0.1:3.5); ylabel(ax,'Hydrogen consumption [g]');
+xticks(ax,1:n); xticklabels(ax,names); ax.TickLabelInterpreter='latex';
+paper_axes(ax);
+relative_pct=(H2/H2(1)-1)*100;
+labels_pct=arrayfun(@(v)sprintf('%+.1f\\%%',v),relative_pct,'UniformOutput',false);
+labels_pct{1}='0.0\%';
+text(ax,b.XEndPoints,b.YEndPoints+0.012,labels_pct,'HorizontalAlignment','center', ...
+    'VerticalAlignment','bottom','Interpreter','latex','FontName','Times New Roman','FontSize',8);
+exportgraphics(f,fullfile(outdir,'04_hydrogen_consumption.png'),'Resolution',600); close(f);
 
 % Diagnostic error plot is kept separate so the paper-facing figure and the
 % quantitative tracking assessment do not obscure one another.
-f=figure('Visible','off','Color','w','Position',[100 100 900 420]);
-ax=axes(f); hold(ax,'on'); grid(ax,'on'); box(ax,'on');
+f=paper_figure([720 300]); ax=axes(f); hold(ax,'on');
 for i=1:n
     ref=interp1(sig{i}.demand.Time,sig{i}.demand.Data,sig{i}.Pd.Time,'previous','extrap');
-    plot(ax,sig{i}.Pd.Time,sig{i}.Pd.Data(:)-ref(:),'Color',paper_colors(i,:),'LineWidth',1.5);
+    plot(ax,sig{i}.Pd.Time,sig{i}.Pd.Data(:)-ref(:),'Color',paper_colors(i,:),'LineWidth',1.0);
 end
 xlim(ax,[0 S.figure_time_s]); xlabel(ax,'Time [s]'); ylabel(ax,'P_{sys}-P_{ref} [W]');
-yline(ax,0,'k:'); legend(ax,names,'Location','best');
-exportgraphics(f,fullfile(outdir,'tracking_error.png'),'Resolution',200); close(f);
-f=figure('Visible','off','Color','w'); hold on; grid on;
-for i=1:n, plot(sig{i}.S.Time,sig{i}.S.Data*36,'Color',C(i,:)); end
-xlim([0 S.figure_time_s]); xlabel('Time [s]'); ylabel('q_{dis} [As]'); legend(names,'Location','best');
-exportgraphics(f,fullfile(outdir,'fig5_qdis.png'),'Resolution',200); close(f);
-f=figure('Visible','off','Color','w'); bar(H2); grid on; xticklabels(names); xtickangle(20);
-ylabel('Hydrogen consumption [g]'); exportgraphics(f,fullfile(outdir,'fig6_hydrogen.png'),'Resolution',200); close(f);
+yline(ax,0,'k:','LineWidth',0.7); paper_axes(ax);
+legend(ax,names,'Location','southwest','Interpreter','latex', ...
+    'FontName','Times New Roman','FontSize',8);
+exportgraphics(f,fullfile(outdir,'01a_tracking_error.png'),'Resolution',600); close(f);
 disp(T);
+end
+
+function f=paper_figure(sz)
+f=figure('Visible','off','Color','w','Units','pixels','Position',[100 100 sz]);
+end
+
+function paper_axes(ax)
+set(ax,'FontName','Times New Roman','FontSize',10,'LineWidth',0.7, ...
+    'TickDir','in','Box','on','XMinorTick','off','YMinorTick','off');
 end
