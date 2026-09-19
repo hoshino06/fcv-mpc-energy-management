@@ -17,5 +17,11 @@ Raw runs are written to `results/01_qmax_sweep/ddp/`; `summary.csv`, the run
 index, and the paper-facing trajectory, discharge-budget, hydrogen, and tracking
 figures are written to `results/01_qmax_sweep/`.
 
+`power_tracking.png` follows the layout and color order of manuscript Fig. 3.
+For quantitative diagnosis, `tracking_error.png` shows `Psys-Pref`, and
+`summary.csv` records full-window RMSE, maximum absolute error, mean error,
+final error, and post-step RMSE. Plot styling must not be used to hide a
+tracking discrepancy.
+
 The shared step-demand definition is `core/step_demand_scenario.m`. This stage
 has no runtime dependency on `simulation/ronbun_iwai/`.
